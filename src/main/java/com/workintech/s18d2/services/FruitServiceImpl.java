@@ -3,25 +3,22 @@ package com.workintech.s18d2.services;
 import com.workintech.s18d2.entity.Fruit;
 import com.workintech.s18d2.exceptions.PlantException;
 import com.workintech.s18d2.repository.FruitRepository;
-import com.workintech.s18d2.validations.PlantValidation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class FruitServiceImpl implements FruitService{
+public class FruitServiceImpl implements FruitService {
 
-    private FruitRepository fruitRepository;
+    private final FruitRepository fruitRepository;
 
-    @Autowired
-    public FruitServiceImpl(FruitRepository fruitRepository){
+    public FruitServiceImpl(FruitRepository fruitRepository) {
         this.fruitRepository = fruitRepository;
     }
 
-    public List<Fruit> getByPriceAsc(){
+    @Override
+    public List<Fruit> getByPriceAsc() {
         return fruitRepository.getByPriceAsc();
     }
 
@@ -32,7 +29,14 @@ public class FruitServiceImpl implements FruitService{
 
     @Override
     public Fruit getById(Long id) {
-        return fruitRepository.findById(id).orElseThrow(() -> new PlantException("plant with given id is not exist: "+id, HttpStatus.NOT_FOUND));
+        if (id < 0) {
+            throw new PlantException("Id must be greater than or equal to 0", HttpStatus.BAD_REQUEST);
+        }
+
+        return fruitRepository.findById(id)
+                .orElseThrow(() ->
+                        new PlantException("Fruit not found with id: " + id, HttpStatus.NOT_FOUND)
+                );
     }
 
     @Override
@@ -51,13 +55,4 @@ public class FruitServiceImpl implements FruitService{
     public List<Fruit> searchByName(String name) {
         return fruitRepository.searchByName(name);
     }
-
-    /*
-    @Override
-    public List<Fruit> getAllFruitsByName(String name) {
-        return fruitRepository.getAllFruitsByName(name);
-    }
-    */
-
-
 }

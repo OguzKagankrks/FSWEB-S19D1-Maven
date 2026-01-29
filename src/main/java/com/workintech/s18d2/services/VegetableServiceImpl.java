@@ -1,70 +1,56 @@
 package com.workintech.s18d2.services;
 
-import com.workintech.s18d2.entity.Fruit;
 import com.workintech.s18d2.entity.Vegetable;
+import com.workintech.s18d2.exceptions.PlantException;
 import com.workintech.s18d2.repository.VegetableRepository;
-import com.workintech.s18d2.validations.PlantValidation;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class VegetableServiceImpl implements VegetableService{
+public class VegetableServiceImpl implements VegetableService {
 
-    private VegetableRepository vegetableRepository;
+    private final VegetableRepository vegetableRepository;
 
-    @Autowired
-    public VegetableServiceImpl(VegetableRepository vegetableRepository)
-    {
+    public VegetableServiceImpl(VegetableRepository vegetableRepository) {
         this.vegetableRepository = vegetableRepository;
     }
 
     @Override
-    public List<Vegetable> orderByCostHighToLow() {
-        return vegetableRepository.orderByCostHighToLow();
+    public List<Vegetable> getByPriceAsc() {
+        return vegetableRepository.getByPriceAsc();
     }
 
     @Override
-    public List<Vegetable> findByName(String name) {
-        return vegetableRepository.findByName(name);
+    public List<Vegetable> getByPriceDesc() {
+        return vegetableRepository.getByPriceDesc();
     }
 
     @Override
-    public List<Vegetable> orderByCostLowToHigh() {
-        return vegetableRepository.orderByCostLowToHigh();
-    }
-
-    @Override
-    public Vegetable findById(Long id) {
-        PlantValidation.isValidId(id);
-        Optional<Vegetable> optionalVegetable = vegetableRepository.findById(id);
-        if(optionalVegetable.isPresent())
-        {
-            return  optionalVegetable.get();
+    public Vegetable getById(long id) {
+        if (id < 0) {
+            throw new PlantException("Id must be greater than or equal to 0", HttpStatus.BAD_REQUEST);
         }
-        return null;
+
+        return vegetableRepository.findById(id)
+                .orElseThrow(() -> new PlantException("Vegetable not found with id: " + id, HttpStatus.NOT_FOUND));
     }
 
     @Override
     public Vegetable save(Vegetable vegetable) {
-        PlantValidation.dataControlVegetable(vegetable);
         return vegetableRepository.save(vegetable);
     }
 
     @Override
-    public List<Vegetable> getAllVegetablesByName(String name) {
-        return vegetableRepository.getAllVegetablesByName(name);
+    public Vegetable delete(long id) {
+        Vegetable vegetable = getById(id);
+        vegetableRepository.delete(vegetable);
+        return vegetable;
     }
 
     @Override
-    public void deleteById(Long id) {
-        PlantValidation.isValidId(id);
-        Vegetable vegetable = findById(id);
-        PlantValidation.dataControlVegetable(vegetable);
-        vegetableRepository.deleteById(id);
+    public List<Vegetable> searchByName(String name) {
+        return vegetableRepository.searchByName(name);
     }
-
-
 }
