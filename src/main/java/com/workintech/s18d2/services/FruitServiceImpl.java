@@ -2,7 +2,7 @@ package com.workintech.s18d2.services;
 
 import com.workintech.s18d2.entity.Fruit;
 import com.workintech.s18d2.exceptions.PlantException;
-import com.workintech.s18d2.repository.FruitRepository;
+import com.workintech.s18d2.dao.FruitRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,7 @@ package com.workintech.s18d2.services;
 
 import com.workintech.s18d2.entity.Vegetable;
 import com.workintech.s18d2.exceptions.PlantException;
-import com.workintech.s18d2.repository.VegetableRepository;
+import com.workintech.s18d2.dao.VegetableRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
