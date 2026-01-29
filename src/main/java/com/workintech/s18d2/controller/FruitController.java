@@ -48,18 +48,16 @@ public class FruitController {
 
 
     @PostMapping
-    public FruitResponseRecord save(@Valid @RequestBody Fruit fruit) {
-        Fruit saved = fruitService.save(fruit);
-        return new FruitResponseRecord("Fruit saved/updated successfully", saved);
+    public Fruit save(@Valid @RequestBody Fruit fruit) {
+        return fruitService.save(fruit);
     }
 
 
     @DeleteMapping("/{id}")
-    public FruitResponseRecord delete(@PathVariable Long id) {
+    public Fruit delete(@PathVariable Long id) {
         if (id < 0) {
             throw new PlantException("Id must be greater than or equal to 0", HttpStatus.BAD_REQUEST);
         }
-        Fruit deleted = fruitService.delete(id);
-        return new FruitResponseRecord("Fruit deleted successfully", deleted);
+        return fruitService.delete(id);
     }
 }

@@ -1,6 +1,5 @@
 package com.workintech.s18d2.controller;
 
-import com.workintech.s18d2.dto.VegetableResponseRecord;
 import com.workintech.s18d2.entity.Vegetable;
 import com.workintech.s18d2.exceptions.PlantException;
 import com.workintech.s18d2.services.VegetableService;
@@ -20,7 +19,7 @@ public class VegetableController {
         this.vegetableService = vegetableService;
     }
 
-
+    
     @GetMapping
     public List<Vegetable> getByPriceAsc() {
         return vegetableService.getByPriceAsc();
@@ -34,19 +33,17 @@ public class VegetableController {
 
 
     @GetMapping("/{id}")
-    public VegetableResponseRecord getById(@PathVariable long id) {
+    public Vegetable getById(@PathVariable long id) {
         if (id < 0) {
             throw new PlantException("Id must be greater than or equal to 0", HttpStatus.BAD_REQUEST);
         }
-        Vegetable vegetable = vegetableService.getById(id);
-        return new VegetableResponseRecord("Vegetable found successfully", vegetable);
+        return vegetableService.getById(id);
     }
 
 
     @PostMapping
-    public VegetableResponseRecord save(@Valid @RequestBody Vegetable vegetable) {
-        Vegetable saved = vegetableService.save(vegetable);
-        return new VegetableResponseRecord("Vegetable saved/updated successfully", saved);
+    public Vegetable save(@Valid @RequestBody Vegetable vegetable) {
+        return vegetableService.save(vegetable);
     }
 
 
@@ -57,11 +54,10 @@ public class VegetableController {
 
 
     @DeleteMapping("/{id}")
-    public VegetableResponseRecord delete(@PathVariable long id) {
+    public Vegetable delete(@PathVariable long id) {
         if (id < 0) {
             throw new PlantException("Id must be greater than or equal to 0", HttpStatus.BAD_REQUEST);
         }
-        Vegetable deleted = vegetableService.delete(id);
-        return new VegetableResponseRecord("Vegetable deleted successfully", deleted);
+        return vegetableService.delete(id);
     }
 }
